@@ -72,6 +72,7 @@ pub fn build_command_execution_approval_request_item(
         command: shlex_join(&payload.command),
         cwd: payload.cwd.clone(),
         process_id: None,
+        description: payload.description.clone(),
         source: CommandExecutionSource::Agent,
         status: CommandExecutionStatus::InProgress,
         command_actions: payload
@@ -92,6 +93,7 @@ pub fn build_command_execution_begin_item(payload: &ExecCommandBeginEvent) -> Th
         command: shlex_join(&payload.command),
         cwd: payload.cwd.clone(),
         process_id: payload.process_id.clone(),
+        description: payload.description.clone(),
         source: payload.source.into(),
         status: CommandExecutionStatus::InProgress,
         command_actions: payload
@@ -119,6 +121,7 @@ pub fn build_command_execution_end_item(payload: &ExecCommandEndEvent) -> Thread
         command: shlex_join(&payload.command),
         cwd: payload.cwd.clone(),
         process_id: payload.process_id.clone(),
+        description: payload.description.clone(),
         source: payload.source.into(),
         status: (&payload.status).into(),
         command_actions: payload
@@ -153,6 +156,7 @@ pub fn build_item_from_guardian_event(
                 command,
                 cwd: cwd.clone(),
                 process_id: None,
+                description: None,
                 source: CommandExecutionSource::Agent,
                 status,
                 command_actions,
@@ -189,6 +193,7 @@ pub fn build_item_from_guardian_event(
                 command,
                 cwd: cwd.clone(),
                 process_id: None,
+                description: None,
                 source: CommandExecutionSource::Agent,
                 status,
                 command_actions,

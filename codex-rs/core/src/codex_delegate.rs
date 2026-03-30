@@ -489,6 +489,7 @@ async fn handle_exec_approval(
                 approval_id,
                 command,
                 cwd,
+                None,
                 reason,
                 network_approval_context,
                 proposed_execpolicy_amendment,

@@ -5019,6 +5019,7 @@ pub enum ThreadItem {
         cwd: AbsolutePathBuf,
         /// Identifier for the underlying PTY process (when available).
         process_id: Option<String>,
+        description: Option<String>,
         #[serde(default)]
         source: CommandExecutionSource,
         status: CommandExecutionStatus,
@@ -6291,6 +6292,10 @@ pub struct CommandExecutionRequestApprovalParams {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional = nullable)]
     pub cwd: Option<AbsolutePathBuf>,
+    /// Optional model-generated description of the command.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional = nullable)]
+    pub description: Option<String>,
     /// Best-effort parsed command actions for friendly display.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     #[ts(optional = nullable)]

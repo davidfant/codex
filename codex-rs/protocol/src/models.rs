@@ -956,6 +956,7 @@ pub struct SearchToolCallParams {
 #[derive(Deserialize, Debug, Clone, PartialEq, JsonSchema, TS)]
 pub struct ShellToolCallParams {
     pub command: Vec<String>,
+    pub description: String,
     pub workdir: Option<String>,
 
     /// This is the maximum time in milliseconds that the command is allowed to run.
@@ -980,6 +981,7 @@ pub struct ShellToolCallParams {
 #[derive(Deserialize, Debug, Clone, PartialEq, JsonSchema, TS)]
 pub struct ShellCommandToolCallParams {
     pub command: String,
+    pub description: String,
     pub workdir: Option<String>,
 
     /// Whether to run the shell with login shell semantics
@@ -2013,6 +2015,7 @@ mod tests {
     fn deserialize_shell_tool_call_params() -> Result<()> {
         let json = r#"{
             "command": ["ls", "-l"],
+            "description": "List files",
             "workdir": "/tmp",
             "timeout": 1000
         }"#;
@@ -2021,6 +2024,7 @@ mod tests {
         assert_eq!(
             ShellToolCallParams {
                 command: vec!["ls".to_string(), "-l".to_string()],
+                description: "List files".to_string(),
                 workdir: Some("/tmp".to_string()),
                 timeout_ms: Some(1000),
                 sandbox_permissions: None,

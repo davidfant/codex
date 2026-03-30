@@ -228,6 +228,9 @@ pub struct ExecApprovalRequestEvent {
     pub command: Vec<String>,
     /// The command's working directory.
     pub cwd: AbsolutePathBuf,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub description: Option<String>,
     /// Optional human-readable reason for the approval (e.g. retry without sandbox).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reason: Option<String>,

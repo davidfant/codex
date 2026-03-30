@@ -1482,6 +1482,8 @@ fn exec_approval_request_from_params(
             .map(split_command_string)
             .unwrap_or_default(),
         cwd: params.cwd.unwrap_or_else(|| fallback_cwd.clone()),
+        description: params.description,
+        description: params.description,
         reason: params.reason,
         network_approval_context: params
             .network_approval_context
@@ -6179,6 +6181,7 @@ impl ChatWidget {
                 command,
                 cwd,
                 process_id,
+                description,
                 source,
                 status,
                 command_actions,
@@ -6200,6 +6203,7 @@ impl ChatWidget {
                             .into_iter()
                             .map(codex_app_server_protocol::CommandAction::into_core)
                             .collect(),
+                        description,
                         source: source.to_core(),
                         interaction_input: None,
                     });
@@ -6215,6 +6219,7 @@ impl ChatWidget {
                             .into_iter()
                             .map(codex_app_server_protocol::CommandAction::into_core)
                             .collect(),
+                        description,
                         source: source.to_core(),
                         interaction_input: None,
                         stdout: String::new(),
@@ -6776,6 +6781,7 @@ impl ChatWidget {
                 command,
                 cwd,
                 process_id,
+                description,
                 source,
                 command_actions,
                 ..
@@ -6790,6 +6796,7 @@ impl ChatWidget {
                         .into_iter()
                         .map(codex_app_server_protocol::CommandAction::into_core)
                         .collect(),
+                    description,
                     source: source.to_core(),
                     interaction_input: None,
                 });

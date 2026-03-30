@@ -1951,6 +1951,7 @@ impl CodexClient {
             network_approval_context,
             command,
             cwd,
+            description: _,
             command_actions,
             additional_permissions,
             proposed_execpolicy_amendment,

@@ -55,6 +55,7 @@ pub struct UnifiedExecRequest {
     pub hook_command: String,
     pub process_id: i32,
     pub cwd: AbsolutePathBuf,
+    pub description: Option<String>,
     pub env: HashMap<String, String>,
     pub exec_server_env_config: Option<ExecServerEnvConfig>,
     pub explicit_env_overrides: HashMap<String, String>,
@@ -161,6 +162,7 @@ impl Approvable<UnifiedExecRequest> for UnifiedExecRuntime<'_> {
                         /*approval_id*/ None,
                         command,
                         cwd.clone(),
+                        req.description.clone(),
                         reason,
                         ctx.network_approval_context.clone(),
                         req.exec_approval_requirement

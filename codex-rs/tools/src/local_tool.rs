@@ -23,6 +23,15 @@ pub fn create_exec_command_tool(options: CommandToolOptions) -> ToolSpec {
             JsonSchema::string(Some("Shell command to execute.".to_string())),
         ),
         (
+            "description".to_string(),
+            JsonSchema::String {
+                description: Some(
+                    "Human-friendly description of what the command will do. Describe the intent and outcome, not the shell syntax."
+                        .to_string(),
+                ),
+            },
+        ),
+        (
             "workdir".to_string(),
             JsonSchema::string(Some(
                 "Optional working directory to run the command in; defaults to the turn cwd."
@@ -82,7 +91,7 @@ pub fn create_exec_command_tool(options: CommandToolOptions) -> ToolSpec {
         defer_loading: None,
         parameters: JsonSchema::object(
             properties,
-            Some(vec!["cmd".to_string()]),
+            Some(vec!["cmd".to_string(), "description".to_string()]),
             Some(false.into()),
         ),
         output_schema: Some(unified_exec_output_schema()),
@@ -143,6 +152,15 @@ pub fn create_shell_tool(options: ShellToolOptions) -> ToolSpec {
             ),
         ),
         (
+            "description".to_string(),
+            JsonSchema::String {
+                description: Some(
+                    "Human-friendly description of what the command will do. Describe the intent and outcome, not the shell syntax."
+                        .to_string(),
+                ),
+            },
+        ),
+        (
             "workdir".to_string(),
             JsonSchema::string(Some(
                 "The working directory to execute the command in".to_string(),
@@ -189,7 +207,7 @@ Examples of valid command strings:
         defer_loading: None,
         parameters: JsonSchema::object(
             properties,
-            Some(vec!["command".to_string()]),
+            Some(vec!["command".to_string(), "description".to_string()]),
             Some(false.into()),
         ),
         output_schema: None,
@@ -203,6 +221,15 @@ pub fn create_shell_command_tool(options: CommandToolOptions) -> ToolSpec {
             JsonSchema::string(Some(
                 "The shell script to execute in the user's default shell".to_string(),
             )),
+        ),
+        (
+            "description".to_string(),
+            JsonSchema::String {
+                description: Some(
+                    "Human-friendly description of what the command will do. Describe the intent and outcome, not the shell syntax."
+                        .to_string(),
+                ),
+            },
         ),
         (
             "workdir".to_string(),
@@ -259,7 +286,7 @@ Examples of valid command strings:
         defer_loading: None,
         parameters: JsonSchema::object(
             properties,
-            Some(vec!["command".to_string()]),
+            Some(vec!["command".to_string(), "description".to_string()]),
             Some(false.into()),
         ),
         output_schema: None,
