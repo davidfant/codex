@@ -64,6 +64,19 @@ fn shell_payload_command(payload: &ToolPayload) -> Option<String> {
     }
 }
 
+fn shell_payload_description(payload: &ToolPayload) -> Option<String> {
+    match payload {
+        ToolPayload::Function { arguments } => parse_arguments::<ShellToolCallParams>(arguments)
+            .ok()
+            .map(|params| params.description)
+            .filter(|description| !description.is_empty()),
+        ToolPayload::LocalShell { params } => {
+            (!params.description.is_empty()).then_some(params.description.clone())
+        }
+        _ => None,
+    }
+}
+
 fn shell_command_payload_command(payload: &ToolPayload) -> Option<String> {
     let ToolPayload::Function { arguments } = payload else {
         return None;
@@ -74,9 +87,21 @@ fn shell_command_payload_command(payload: &ToolPayload) -> Option<String> {
         .map(|params| params.command)
 }
 
+fn shell_command_payload_description(payload: &ToolPayload) -> Option<String> {
+    let ToolPayload::Function { arguments } = payload else {
+        return None;
+    };
+
+    parse_arguments::<ShellCommandToolCallParams>(arguments)
+        .ok()
+        .map(|params| params.description)
+        .filter(|description| !description.is_empty())
+}
+
 struct RunExecLikeArgs {
     tool_name: String,
     exec_params: ExecParams,
+    description: Option<String>,
     additional_permissions: Option<PermissionProfile>,
     prefix_rule: Option<Vec<String>>,
     session: Arc<crate::codex::Session>,
@@ -242,6 +267,7 @@ impl ToolHandler for ShellHandler {
                 Self::run_exec_like(RunExecLikeArgs {
                     tool_name: tool_name.clone(),
                     exec_params,
+                    description: shell_payload_description(&ToolPayload::Function { arguments }),
                     additional_permissions: params.additional_permissions.clone(),
                     prefix_rule,
                     session,
@@ -259,6 +285,9 @@ impl ToolHandler for ShellHandler {
                 Self::run_exec_like(RunExecLikeArgs {
                     tool_name: tool_name.clone(),
                     exec_params,
+                    description: shell_payload_description(&ToolPayload::LocalShell {
+                        params: params.clone(),
+                    }),
                     additional_permissions: None,
                     prefix_rule: None,
                     session,
@@ -366,6 +395,7 @@ impl ToolHandler for ShellCommandHandler {
         ShellHandler::run_exec_like(RunExecLikeArgs {
             tool_name,
             exec_params,
+            description: shell_command_payload_description(&ToolPayload::Function { arguments }),
             additional_permissions: params.additional_permissions.clone(),
             prefix_rule,
             session,
@@ -384,6 +414,7 @@ impl ShellHandler {
         let RunExecLikeArgs {
             tool_name,
             exec_params,
+            description,
             additional_permissions,
             prefix_rule,
             session,
@@ -478,6 +509,7 @@ impl ShellHandler {
             exec_params.command.clone(),
             exec_params.cwd.clone(),
             source,
+            description.clone(),
             freeform,
         );
         let event_ctx = ToolEventCtx::new(
@@ -518,6 +550,7 @@ impl ShellHandler {
             additional_permissions_preapproved: effective_additional_permissions
                 .permissions_preapproved,
             justification: exec_params.justification.clone(),
+            description,
             exec_approval_requirement,
         };
         let mut orchestrator = ToolOrchestrator::new();

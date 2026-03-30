@@ -98,6 +98,7 @@ use codex_app_server_protocol::TurnPlanStep;
 use codex_app_server_protocol::TurnPlanUpdatedNotification;
 use codex_app_server_protocol::TurnStartedNotification;
 use codex_app_server_protocol::TurnStatus;
+use codex_app_server_protocol::build_command_execution_begin_item;
 use codex_app_server_protocol::build_command_execution_end_item;
 use codex_app_server_protocol::build_file_change_approval_request_item;
 use codex_app_server_protocol::build_file_change_begin_item;
@@ -157,6 +158,7 @@ enum CommandExecutionApprovalPresentation {
 struct CommandExecutionCompletionItem {
     command: String,
     cwd: PathBuf,
+    description: Option<String>,
     command_actions: Vec<V2ParsedCommand>,
 }
 
@@ -269,11 +271,13 @@ pub(crate) async fn apply_bespoke_event_handling(
                     Some(ThreadItem::CommandExecution {
                         command,
                         cwd,
+                        description,
                         command_actions,
                         ..
                     }) => Some(CommandExecutionCompletionItem {
                         command,
                         cwd,
+                        description,
                         command_actions,
                     }),
                     Some(_) | None => None,
@@ -293,6 +297,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                         assessment.id.clone(),
                         completion_item.command.clone(),
                         completion_item.cwd.clone(),
+                        completion_item.description.clone(),
                         completion_item.command_actions.clone(),
                         CommandExecutionSource::Agent,
                         &outgoing,
@@ -319,6 +324,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                         completion_item.command,
                         completion_item.cwd,
                         /*process_id*/ None,
+                        completion_item.description,
                         CommandExecutionSource::Agent,
                         completion_item.command_actions,
                         CommandExecutionStatus::Declined,
@@ -570,6 +576,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                 turn_id,
                 command,
                 cwd,
+                description,
                 reason,
                 network_approval_context,
                 proposed_execpolicy_amendment,
@@ -618,6 +625,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                         let completion_item = CommandExecutionCompletionItem {
                             command: command_string,
                             cwd: cwd.clone(),
+                            description: description.clone(),
                             command_actions: command_actions.clone(),
                         };
                         CommandExecutionApprovalPresentation::Command(completion_item)
@@ -644,6 +652,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                             call_id.clone(),
                             completion_item.command.clone(),
                             completion_item.cwd.clone(),
+                            completion_item.description.clone(),
                             completion_item.command_actions.clone(),
                             CommandExecutionSource::Agent,
                             &outgoing,
@@ -672,6 +681,9 @@ pub(crate) async fn apply_bespoke_event_handling(
                         network_approval_context,
                         command,
                         cwd,
+                        description: completion_item
+                            .as_ref()
+                            .and_then(|item| item.description.clone()),
                         command_actions,
                         additional_permissions,
                         proposed_execpolicy_amendment: proposed_execpolicy_amendment_v2,
@@ -1590,18 +1602,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                     .insert(item_id.clone())
             };
             if first_start {
-                let item = ThreadItem::CommandExecution {
-                    id: item_id,
-                    command,
-                    cwd,
-                    process_id,
-                    source: exec_command_begin_event.source.into(),
-                    status: CommandExecutionStatus::InProgress,
-                    command_actions,
-                    aggregated_output: None,
-                    exit_code: None,
-                    duration_ms: None,
-                };
+                let item = build_command_execution_begin_item(&exec_command_begin_event);
                 let notification = ItemStartedNotification {
                     thread_id: conversation_id.to_string(),
                     turn_id: event_turn_id.clone(),
@@ -1945,6 +1946,7 @@ async fn start_command_execution_item(
     item_id: String,
     command: String,
     cwd: PathBuf,
+    description: Option<String>,
     command_actions: Vec<V2ParsedCommand>,
     source: CommandExecutionSource,
     outgoing: &ThreadScopedOutgoingMessageSender,
@@ -1966,6 +1968,7 @@ async fn start_command_execution_item(
                 command,
                 cwd,
                 process_id: None,
+                description,
                 source,
                 status: CommandExecutionStatus::InProgress,
                 command_actions,
@@ -1989,6 +1992,7 @@ async fn complete_command_execution_item(
     command: String,
     cwd: PathBuf,
     process_id: Option<String>,
+    description: Option<String>,
     source: CommandExecutionSource,
     command_actions: Vec<V2ParsedCommand>,
     status: CommandExecutionStatus,
@@ -2010,6 +2014,7 @@ async fn complete_command_execution_item(
         command,
         cwd,
         process_id,
+        description,
         source,
         status,
         command_actions,
@@ -2739,6 +2744,7 @@ async fn on_command_execution_request_approval_response(
             completion_item.command,
             completion_item.cwd,
             /*process_id*/ None,
+            completion_item.description,
             CommandExecutionSource::Agent,
             completion_item.command_actions,
             status,
@@ -2957,6 +2963,7 @@ mod tests {
         CommandExecutionCompletionItem {
             command: command.to_string(),
             cwd: PathBuf::from("/tmp"),
+            description: None,
             command_actions: vec![V2ParsedCommand::Unknown {
                 command: command.to_string(),
             }],
@@ -3168,6 +3175,7 @@ mod tests {
             "cmd-1".to_string(),
             completion_item.command.clone(),
             completion_item.cwd.clone(),
+            completion_item.description.clone(),
             completion_item.command_actions.clone(),
             CommandExecutionSource::Agent,
             &outgoing,
@@ -3188,6 +3196,7 @@ mod tests {
                         command: completion_item.command.clone(),
                         cwd: completion_item.cwd.clone(),
                         process_id: None,
+                        description: completion_item.description.clone(),
                         source: CommandExecutionSource::Agent,
                         status: CommandExecutionStatus::InProgress,
                         command_actions: completion_item.command_actions.clone(),
@@ -3206,6 +3215,7 @@ mod tests {
             "cmd-1".to_string(),
             completion_item.command.clone(),
             completion_item.cwd.clone(),
+            completion_item.description.clone(),
             completion_item.command_actions.clone(),
             CommandExecutionSource::Agent,
             &outgoing,
@@ -3237,6 +3247,7 @@ mod tests {
             "cmd-1".to_string(),
             completion_item.command.clone(),
             completion_item.cwd.clone(),
+            completion_item.description.clone(),
             completion_item.command_actions.clone(),
             CommandExecutionSource::Agent,
             &outgoing,
@@ -3252,6 +3263,7 @@ mod tests {
             completion_item.command.clone(),
             completion_item.cwd.clone(),
             /*process_id*/ None,
+            completion_item.description.clone(),
             CommandExecutionSource::Agent,
             completion_item.command_actions.clone(),
             CommandExecutionStatus::Declined,
@@ -3279,6 +3291,7 @@ mod tests {
             completion_item.command,
             completion_item.cwd,
             /*process_id*/ None,
+            completion_item.description,
             CommandExecutionSource::Agent,
             completion_item.command_actions,
             CommandExecutionStatus::Declined,

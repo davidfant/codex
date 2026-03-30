@@ -2846,6 +2846,9 @@ pub struct ExecCommandBeginEvent {
     /// The command's working directory if not the default cwd for the agent.
     pub cwd: PathBuf,
     pub parsed_cmd: Vec<ParsedCommand>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub description: Option<String>,
     /// Where the command originated. Defaults to Agent for backward compatibility.
     #[serde(default)]
     pub source: ExecCommandSource,
@@ -2870,6 +2873,9 @@ pub struct ExecCommandEndEvent {
     /// The command's working directory if not the default cwd for the agent.
     pub cwd: PathBuf,
     pub parsed_cmd: Vec<ParsedCommand>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[ts(optional)]
+    pub description: Option<String>,
     /// Where the command originated. Defaults to Agent for backward compatibility.
     #[serde(default)]
     pub source: ExecCommandSource,

@@ -91,6 +91,7 @@ pub(crate) struct ExecCommandRequest {
     pub process_id: i32,
     pub yield_time_ms: u64,
     pub max_output_tokens: Option<usize>,
+    pub description: Option<String>,
     pub workdir: Option<PathBuf>,
     pub network: Option<NetworkProxy>,
     pub tty: bool,

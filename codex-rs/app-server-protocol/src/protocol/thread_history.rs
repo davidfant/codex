@@ -1787,6 +1787,7 @@ mod tests {
                 parsed_cmd: vec![ParsedCommand::Unknown {
                     cmd: "echo hello world".into(),
                 }],
+                description: None,
                 source: ExecCommandSource::Agent,
                 interaction_input: None,
                 stdout: String::new(),
@@ -1834,6 +1835,7 @@ mod tests {
                 command: "echo 'hello world'".into(),
                 cwd: PathBuf::from("/tmp"),
                 process_id: Some("pid-1".into()),
+                description: None,
                 source: CommandExecutionSource::Agent,
                 status: CommandExecutionStatus::Completed,
                 command_actions: vec![CommandAction::Unknown {
@@ -1943,6 +1945,7 @@ mod tests {
                 command: vec!["ls".into()],
                 cwd: PathBuf::from("/tmp"),
                 parsed_cmd: vec![ParsedCommand::Unknown { cmd: "ls".into() }],
+                description: None,
                 source: ExecCommandSource::Agent,
                 interaction_input: None,
                 stdout: String::new(),
@@ -1985,6 +1988,7 @@ mod tests {
                 command: "ls".into(),
                 cwd: PathBuf::from("/tmp"),
                 process_id: Some("pid-2".into()),
+                description: None,
                 source: CommandExecutionSource::Agent,
                 status: CommandExecutionStatus::Declined,
                 command_actions: vec![CommandAction::Unknown {
@@ -2183,6 +2187,7 @@ mod tests {
                 parsed_cmd: vec![ParsedCommand::Unknown {
                     cmd: "echo done".into(),
                 }],
+                description: None,
                 source: ExecCommandSource::Agent,
                 interaction_input: None,
                 stdout: "done\n".into(),
@@ -2218,6 +2223,7 @@ mod tests {
                 command: "echo done".into(),
                 cwd: PathBuf::from("/tmp"),
                 process_id: Some("pid-42".into()),
+                description: None,
                 source: CommandExecutionSource::Agent,
                 status: CommandExecutionStatus::Completed,
                 command_actions: vec![CommandAction::Unknown {
@@ -2272,6 +2278,7 @@ mod tests {
                 parsed_cmd: vec![ParsedCommand::Unknown {
                     cmd: "echo done".into(),
                 }],
+                description: None,
                 source: ExecCommandSource::Agent,
                 interaction_input: None,
                 stdout: "done\n".into(),
