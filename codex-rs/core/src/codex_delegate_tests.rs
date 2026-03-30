@@ -281,6 +281,7 @@ async fn handle_exec_approval_uses_call_id_for_guardian_review_and_approval_id_f
                     turn_id: "child-turn-1".to_string(),
                     command: vec!["rm".to_string(), "-rf".to_string(), "tmp".to_string()],
                     cwd: PathBuf::from("/tmp"),
+                    description: None,
                     reason: Some("unsafe subcommand".to_string()),
                     network_approval_context: None,
                     proposed_execpolicy_amendment: None,

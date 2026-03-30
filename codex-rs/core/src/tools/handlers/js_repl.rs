@@ -63,6 +63,7 @@ async fn emit_js_repl_exec_begin(
         vec!["js_repl".to_string()],
         turn.cwd.to_path_buf(),
         ExecCommandSource::Agent,
+        None,
         /*freeform*/ false,
     );
     let ctx = ToolEventCtx::new(session, turn, call_id, /*turn_diff_tracker*/ None);
@@ -82,6 +83,7 @@ async fn emit_js_repl_exec_end(
         vec!["js_repl".to_string()],
         turn.cwd.to_path_buf(),
         ExecCommandSource::Agent,
+        None,
         /*freeform*/ false,
     );
     let ctx = ToolEventCtx::new(session, turn, call_id, /*turn_diff_tracker*/ None);

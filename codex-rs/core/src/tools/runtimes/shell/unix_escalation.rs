@@ -406,6 +406,7 @@ impl CoreShellActionProvider {
                         approval_id,
                         command,
                         workdir,
+                        None,
                         /*reason*/ None,
                         /*network_approval_context*/ None,
                         /*proposed_execpolicy_amendment*/ None,

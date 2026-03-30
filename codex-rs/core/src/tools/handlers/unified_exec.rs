@@ -40,6 +40,7 @@ pub struct UnifiedExecHandler;
 #[derive(Debug, Deserialize)]
 pub(crate) struct ExecCommandArgs {
     cmd: String,
+    description: String,
     #[serde(default)]
     pub(crate) workdir: Option<String>,
     #[serde(default)]
@@ -205,6 +206,7 @@ impl ToolHandler for UnifiedExecHandler {
                 let command_for_display = codex_shell_command::parse_command::shlex_join(&command);
 
                 let ExecCommandArgs {
+                    description,
                     workdir,
                     tty,
                     yield_time_ms,
@@ -310,6 +312,7 @@ impl ToolHandler for UnifiedExecHandler {
                             process_id,
                             yield_time_ms,
                             max_output_tokens,
+                            description: Some(description),
                             workdir,
                             network: context.turn.network.clone(),
                             tty,

@@ -223,6 +223,7 @@ async fn run_codex_tool_session_inner(
                             call_id,
                             approval_id: _,
                             reason: _,
+                            description: _,
                             proposed_execpolicy_amendment: _,
                             proposed_network_policy_amendments: _,
                             parsed_cmd,

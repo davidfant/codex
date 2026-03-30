@@ -156,6 +156,7 @@ enum CommandExecutionApprovalPresentation {
 struct CommandExecutionCompletionItem {
     command: String,
     cwd: PathBuf,
+    description: Option<String>,
     command_actions: Vec<V2ParsedCommand>,
 }
 
@@ -602,6 +603,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                 turn_id,
                 command,
                 cwd,
+                description,
                 reason,
                 network_approval_context,
                 proposed_execpolicy_amendment,
@@ -650,6 +652,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                         let completion_item = CommandExecutionCompletionItem {
                             command: command_string,
                             cwd: cwd.clone(),
+                            description: description.clone(),
                             command_actions: command_actions.clone(),
                         };
                         CommandExecutionApprovalPresentation::Command(completion_item)
@@ -688,6 +691,9 @@ pub(crate) async fn apply_bespoke_event_handling(
                         network_approval_context,
                         command,
                         cwd,
+                        description: completion_item
+                            .as_ref()
+                            .and_then(|item| item.description.clone()),
                         command_actions,
                         additional_permissions,
                         proposed_execpolicy_amendment: proposed_execpolicy_amendment_v2,
@@ -1621,6 +1627,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                 command,
                 cwd,
                 process_id,
+                description: exec_command_begin_event.description,
                 source: exec_command_begin_event.source.into(),
                 status: CommandExecutionStatus::InProgress,
                 command_actions,
@@ -1699,6 +1706,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                 cwd,
                 parsed_cmd,
                 process_id,
+                description,
                 aggregated_output,
                 exit_code,
                 duration,
@@ -1734,6 +1742,7 @@ pub(crate) async fn apply_bespoke_event_handling(
                 command: shlex_join(&command),
                 cwd,
                 process_id,
+                description,
                 source: source.into(),
                 status,
                 command_actions,
@@ -1998,6 +2007,7 @@ async fn complete_command_execution_item(
     command: String,
     cwd: PathBuf,
     process_id: Option<String>,
+    description: Option<String>,
     source: CommandExecutionSource,
     command_actions: Vec<V2ParsedCommand>,
     status: CommandExecutionStatus,
@@ -2008,6 +2018,7 @@ async fn complete_command_execution_item(
         command,
         cwd,
         process_id,
+        description,
         source,
         status,
         command_actions,
@@ -2715,6 +2726,7 @@ async fn on_command_execution_request_approval_response(
             completion_item.command,
             completion_item.cwd,
             /*process_id*/ None,
+            completion_item.description,
             CommandExecutionSource::Agent,
             completion_item.command_actions,
             status,

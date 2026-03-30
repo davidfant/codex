@@ -190,6 +190,7 @@ impl ToolRouter {
                     LocalShellAction::Exec(exec) => {
                         let params = ShellToolCallParams {
                             command: exec.command,
+                            description: String::new(),
                             workdir: exec.working_directory,
                             timeout_ms: exec.timeout_ms,
                             sandbox_permissions: Some(SandboxPermissions::UseDefault),
