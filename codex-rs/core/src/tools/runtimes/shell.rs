@@ -46,6 +46,7 @@ use std::path::PathBuf;
 pub struct ShellRequest {
     pub command: Vec<String>,
     pub cwd: PathBuf,
+    pub description: Option<String>,
     pub timeout_ms: Option<u64>,
     pub env: HashMap<String, String>,
     pub explicit_env_overrides: HashMap<String, String>,
@@ -178,6 +179,7 @@ impl Approvable<ShellRequest> for ShellRuntime {
                         /*approval_id*/ None,
                         command,
                         cwd,
+                        req.description.clone(),
                         reason,
                         ctx.network_approval_context.clone(),
                         req.exec_approval_requirement

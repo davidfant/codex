@@ -380,6 +380,7 @@ impl NetworkApprovalService {
                     /*approval_id*/ None,
                     prompt_command,
                     turn_context.cwd.to_path_buf(),
+                    None,
                     Some(prompt_reason),
                     Some(network_approval_context.clone()),
                     /*proposed_execpolicy_amendment*/ None,

@@ -93,6 +93,7 @@ async fn shell_command_handler_to_exec_params_uses_session_shell_and_turn_contex
 
     let params = ShellCommandToolCallParams {
         command,
+        description: "Run a shell command".to_string(),
         workdir,
         login,
         timeout_ms,
@@ -160,6 +161,7 @@ async fn shell_command_handler_defaults_to_non_login_when_disallowed() {
     let (session, turn_context) = make_session_and_context().await;
     let params = ShellCommandToolCallParams {
         command: "echo hello".to_string(),
+        description: "Print hello".to_string(),
         workdir: None,
         login: None,
         timeout_ms: None,
@@ -208,6 +210,7 @@ async fn shell_pre_tool_use_payload_uses_joined_command() {
                 "-lc".to_string(),
                 "printf hi".to_string(),
             ],
+            description: String::new(),
             workdir: None,
             timeout_ms: None,
             sandbox_permissions: None,

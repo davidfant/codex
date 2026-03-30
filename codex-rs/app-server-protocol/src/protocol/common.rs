@@ -1828,6 +1828,7 @@ mod tests {
             network_approval_context: None,
             command: Some("cat file".to_string()),
             cwd: None,
+            description: None,
             command_actions: None,
             additional_permissions: Some(v2::AdditionalPermissionProfile {
                 network: None,

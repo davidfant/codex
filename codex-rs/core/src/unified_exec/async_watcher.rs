@@ -111,6 +111,7 @@ pub(crate) fn spawn_exit_watcher(
     call_id: String,
     command: Vec<String>,
     cwd: PathBuf,
+    description: Option<String>,
     process_id: i32,
     transcript: Arc<Mutex<HeadTailBuffer>>,
     started_at: Instant,
@@ -130,6 +131,7 @@ pub(crate) fn spawn_exit_watcher(
                 call_id,
                 command,
                 cwd,
+                description,
                 Some(process_id.to_string()),
                 transcript,
                 message,
@@ -144,6 +146,7 @@ pub(crate) fn spawn_exit_watcher(
                 call_id,
                 command,
                 cwd,
+                description,
                 Some(process_id.to_string()),
                 transcript,
                 String::new(),
@@ -197,6 +200,7 @@ pub(crate) async fn emit_exec_end_for_unified_exec(
     call_id: String,
     command: Vec<String>,
     cwd: PathBuf,
+    description: Option<String>,
     process_id: Option<String>,
     transcript: Arc<Mutex<HeadTailBuffer>>,
     fallback_output: String,
@@ -222,6 +226,7 @@ pub(crate) async fn emit_exec_end_for_unified_exec(
         &command,
         cwd,
         ExecCommandSource::UnifiedExecStartup,
+        description,
         process_id,
     );
     emitter
@@ -236,6 +241,7 @@ pub(crate) async fn emit_failed_exec_end_for_unified_exec(
     call_id: String,
     command: Vec<String>,
     cwd: PathBuf,
+    description: Option<String>,
     process_id: Option<String>,
     transcript: Arc<Mutex<HeadTailBuffer>>,
     message: String,
@@ -265,6 +271,7 @@ pub(crate) async fn emit_failed_exec_end_for_unified_exec(
         &command,
         cwd,
         ExecCommandSource::UnifiedExecStartup,
+        description,
         process_id,
     );
     emitter
