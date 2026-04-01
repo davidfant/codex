@@ -2,6 +2,8 @@ use super::*;
 use pretty_assertions::assert_eq;
 use std::collections::BTreeMap;
 
+const COMMAND_DESCRIPTION_LABEL: &str = "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax.";
+
 fn windows_shell_safety_description() -> String {
     format!("\n\n{}", windows_destructive_filesystem_guidance())
 }
@@ -38,6 +40,12 @@ Examples of valid command strings:
             JsonSchema::Array {
                 items: Box::new(JsonSchema::String { description: None }),
                 description: Some("The command to execute".to_string()),
+            },
+        ),
+        (
+            "description".to_string(),
+            JsonSchema::String {
+                description: Some(COMMAND_DESCRIPTION_LABEL.to_string()),
             },
         ),
         (
@@ -97,7 +105,7 @@ Examples of valid command strings:
             defer_loading: None,
             parameters: JsonSchema::Object {
                 properties,
-                required: Some(vec!["command".to_string()]),
+                required: Some(vec!["command".to_string(), "description".to_string()]),
                 additional_properties: Some(false.into()),
             },
             output_schema: None,
@@ -127,6 +135,12 @@ fn exec_command_tool_matches_expected_spec() {
             "cmd".to_string(),
             JsonSchema::String {
                 description: Some("Shell command to execute.".to_string()),
+            },
+        ),
+        (
+            "description".to_string(),
+            JsonSchema::String {
+                description: Some(COMMAND_DESCRIPTION_LABEL.to_string()),
             },
         ),
         (
@@ -194,7 +208,7 @@ fn exec_command_tool_matches_expected_spec() {
             defer_loading: None,
             parameters: JsonSchema::Object {
                 properties,
-                required: Some(vec!["cmd".to_string()]),
+                required: Some(vec!["cmd".to_string(), "description".to_string()]),
                 additional_properties: Some(false.into()),
             },
             output_schema: Some(unified_exec_output_schema()),
@@ -272,6 +286,12 @@ fn shell_tool_with_request_permission_includes_additional_permissions() {
             },
         ),
         (
+            "description".to_string(),
+            JsonSchema::String {
+                description: Some(COMMAND_DESCRIPTION_LABEL.to_string()),
+            },
+        ),
+        (
             "workdir".to_string(),
             JsonSchema::String {
                 description: Some("The working directory to execute the command in".to_string()),
@@ -320,7 +340,7 @@ Examples of valid command strings:
             defer_loading: None,
             parameters: JsonSchema::Object {
                 properties,
-                required: Some(vec!["command".to_string()]),
+                required: Some(vec!["command".to_string(), "description".to_string()]),
                 additional_properties: Some(false.into()),
             },
             output_schema: None,
@@ -399,6 +419,12 @@ Examples of valid command strings:
             },
         ),
         (
+            "description".to_string(),
+            JsonSchema::String {
+                description: Some(COMMAND_DESCRIPTION_LABEL.to_string()),
+            },
+        ),
+        (
             "workdir".to_string(),
             JsonSchema::String {
                 description: Some("The working directory to execute the command in".to_string()),
@@ -433,7 +459,7 @@ Examples of valid command strings:
             defer_loading: None,
             parameters: JsonSchema::Object {
                 properties,
-                required: Some(vec!["command".to_string()]),
+                required: Some(vec!["command".to_string(), "description".to_string()]),
                 additional_properties: Some(false.into()),
             },
             output_schema: None,
