@@ -28,7 +28,7 @@ pub fn create_exec_command_tool(options: CommandToolOptions) -> ToolSpec {
             "description".to_string(),
             JsonSchema::String {
                 description: Some(
-                    "Human-friendly description of what the command will do. Describe the intent and outcome, not the shell syntax."
+                    "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax."
                         .to_string(),
                 ),
             },
@@ -175,7 +175,7 @@ pub fn create_shell_tool(options: ShellToolOptions) -> ToolSpec {
             "description".to_string(),
             JsonSchema::String {
                 description: Some(
-                    "Human-friendly description of what the command will do. Describe the intent and outcome, not the shell syntax."
+                    "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax."
                         .to_string(),
                 ),
             },
@@ -248,7 +248,7 @@ pub fn create_shell_command_tool(options: CommandToolOptions) -> ToolSpec {
             "description".to_string(),
             JsonSchema::String {
                 description: Some(
-                    "Human-friendly description of what the command will do. Describe the intent and outcome, not the shell syntax."
+                    "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax."
                         .to_string(),
                 ),
             },
