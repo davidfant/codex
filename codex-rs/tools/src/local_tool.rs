@@ -28,7 +28,7 @@ pub fn create_exec_command_tool(options: CommandToolOptions) -> ToolSpec {
             "description".to_string(),
             JsonSchema::String {
                 description: Some(
-                    "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax."
+                    "Why you're running this, in 3-9 words. Explain the purpose for a non-technical reader, not the command being run."
                         .to_string(),
                 ),
             },
@@ -175,7 +175,7 @@ pub fn create_shell_tool(options: ShellToolOptions) -> ToolSpec {
             "description".to_string(),
             JsonSchema::String {
                 description: Some(
-                    "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax."
+                    "Why you're running this, in 3-9 words. Explain the purpose for a non-technical reader, not the command being run."
                         .to_string(),
                 ),
             },
@@ -248,7 +248,7 @@ pub fn create_shell_command_tool(options: CommandToolOptions) -> ToolSpec {
             "description".to_string(),
             JsonSchema::String {
                 description: Some(
-                    "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax."
+                    "Why you're running this, in 3-9 words. Explain the purpose for a non-technical reader, not the command being run."
                         .to_string(),
                 ),
             },

@@ -2,7 +2,7 @@ use super::*;
 use pretty_assertions::assert_eq;
 use std::collections::BTreeMap;
 
-const COMMAND_DESCRIPTION_LABEL: &str = "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax.";
+const COMMAND_DESCRIPTION_LABEL: &str = "Why you're running this, in 3-9 words. Explain the purpose for a non-technical reader, not the command being run.";
 
 fn windows_shell_safety_description() -> String {
     format!("\n\n{}", windows_destructive_filesystem_guidance())
