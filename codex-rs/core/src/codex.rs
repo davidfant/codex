@@ -6480,6 +6480,11 @@ pub(crate) async fn built_tools(
         .services
         .plugins_manager
         .plugins_for_config(&turn_context.config);
+    let installed_apps = loaded_plugins.effective_apps();
+    let installed_app_connector_ids = installed_apps
+        .iter()
+        .map(|connector_id| connector_id.0.clone())
+        .collect::<HashSet<_>>();
 
     let mut effective_explicitly_enabled_connectors = explicitly_enabled_connectors.clone();
     effective_explicitly_enabled_connectors.extend(sess.get_connector_selection().await);
@@ -6493,7 +6498,7 @@ pub(crate) async fn built_tools(
         });
     let connectors = if apps_enabled {
         let connectors = connectors::merge_plugin_apps_with_accessible(
-            loaded_plugins.effective_apps(),
+            installed_apps,
             accessible_connectors.clone().unwrap_or_default(),
         );
         Some(connectors::with_app_enabled_state(
@@ -6503,6 +6508,13 @@ pub(crate) async fn built_tools(
     } else {
         None
     };
+    let installed_connectors = connectors.as_ref().map(|connectors| {
+        connectors
+            .iter()
+            .filter(|connector| installed_app_connector_ids.contains(connector.id.as_str()))
+            .cloned()
+            .collect::<Vec<_>>()
+    });
     let auth = sess.services.auth_manager.auth().await;
     let discoverable_tools = if apps_enabled && turn_context.tools_config.tool_suggest {
         if let Some(accessible_connectors) = accessible_connectors_with_enabled_state.as_ref() {
@@ -6532,11 +6544,11 @@ pub(crate) async fn built_tools(
         None
     };
 
-    let app_tools = connectors.as_ref().map(|connectors| {
+    let app_tools = installed_connectors.as_ref().map(|connectors| {
         filter_codex_apps_mcp_tools(&mcp_tools, connectors, &turn_context.config)
     });
 
-    if let Some(connectors) = connectors.as_ref() {
+    if let Some(connectors) = installed_connectors.as_ref() {
         let skill_name_counts_lower = skills_outcome.map_or_else(HashMap::new, |outcome| {
             build_skill_name_counts(&outcome.skills, &outcome.disabled_paths).1
         });
