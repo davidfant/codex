@@ -1586,14 +1586,6 @@ pub(crate) async fn apply_bespoke_event_handling(
         }
         EventMsg::ExecCommandBegin(exec_command_begin_event) => {
             let item_id = exec_command_begin_event.call_id.clone();
-            let command_actions = exec_command_begin_event
-                .parsed_cmd
-                .into_iter()
-                .map(V2ParsedCommand::from)
-                .collect::<Vec<_>>();
-            let command = shlex_join(&exec_command_begin_event.command);
-            let cwd = exec_command_begin_event.cwd;
-            let process_id = exec_command_begin_event.process_id;
             let first_start = {
                 let mut state = thread_state.lock().await;
                 state

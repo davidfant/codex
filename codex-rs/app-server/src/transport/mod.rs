@@ -772,6 +772,7 @@ mod tests {
                         network_approval_context: None,
                         command: Some("cat file".to_string()),
                         cwd: Some(PathBuf::from("/tmp")),
+                        description: None,
                         command_actions: None,
                         additional_permissions: Some(
                             codex_app_server_protocol::AdditionalPermissionProfile {
@@ -834,6 +835,7 @@ mod tests {
                         network_approval_context: None,
                         command: Some("cat file".to_string()),
                         cwd: Some(PathBuf::from("/tmp")),
+                        description: None,
                         command_actions: None,
                         additional_permissions: Some(
                             codex_app_server_protocol::AdditionalPermissionProfile {

@@ -2074,6 +2074,7 @@ mod tests {
                 command: "rm -rf /tmp/guardian".into(),
                 cwd: PathBuf::from("/tmp"),
                 process_id: None,
+                description: None,
                 source: CommandExecutionSource::Agent,
                 status: CommandExecutionStatus::Declined,
                 command_actions: vec![CommandAction::Unknown {
@@ -2133,6 +2134,7 @@ mod tests {
                 command: "/bin/rm -f /tmp/file.sqlite".into(),
                 cwd: PathBuf::from("/tmp"),
                 process_id: None,
+                description: None,
                 source: CommandExecutionSource::Agent,
                 status: CommandExecutionStatus::InProgress,
                 command_actions: vec![CommandAction::Unknown {
