@@ -1483,7 +1483,6 @@ fn exec_approval_request_from_params(
             .unwrap_or_default(),
         cwd: params.cwd.unwrap_or_else(|| fallback_cwd.clone()),
         description: params.description,
-        description: params.description,
         reason: params.reason,
         network_approval_context: params
             .network_approval_context
