@@ -16,6 +16,8 @@ pub struct ShellToolOptions {
     pub exec_permission_approvals_enabled: bool,
 }
 
+const COMMAND_DESCRIPTION_LABEL: &str = "Very short human-friendly label for what the command does (3-9 words). Use terse phrases, not full sentences and not shell syntax.";
+
 pub fn create_exec_command_tool(options: CommandToolOptions) -> ToolSpec {
     let mut properties = BTreeMap::from([
         (
@@ -24,12 +26,7 @@ pub fn create_exec_command_tool(options: CommandToolOptions) -> ToolSpec {
         ),
         (
             "description".to_string(),
-            JsonSchema::String {
-                description: Some(
-                    "Why you're running this, in 3-9 words. Explain the purpose for a non-technical reader, not the command being run."
-                        .to_string(),
-                ),
-            },
+            JsonSchema::string(Some(COMMAND_DESCRIPTION_LABEL.to_string())),
         ),
         (
             "workdir".to_string(),
@@ -153,12 +150,7 @@ pub fn create_shell_tool(options: ShellToolOptions) -> ToolSpec {
         ),
         (
             "description".to_string(),
-            JsonSchema::String {
-                description: Some(
-                    "Why you're running this, in 3-9 words. Explain the purpose for a non-technical reader, not the command being run."
-                        .to_string(),
-                ),
-            },
+            JsonSchema::string(Some(COMMAND_DESCRIPTION_LABEL.to_string())),
         ),
         (
             "workdir".to_string(),
@@ -224,12 +216,7 @@ pub fn create_shell_command_tool(options: CommandToolOptions) -> ToolSpec {
         ),
         (
             "description".to_string(),
-            JsonSchema::String {
-                description: Some(
-                    "Why you're running this, in 3-9 words. Explain the purpose for a non-technical reader, not the command being run."
-                        .to_string(),
-                ),
-            },
+            JsonSchema::string(Some(COMMAND_DESCRIPTION_LABEL.to_string())),
         ),
         (
             "workdir".to_string(),

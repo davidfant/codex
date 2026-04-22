@@ -819,6 +819,12 @@
               ],
               "description": "The command's working directory."
             },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "durationMs": {
               "description": "The duration of the command execution in milliseconds.",
               "format": "int64",

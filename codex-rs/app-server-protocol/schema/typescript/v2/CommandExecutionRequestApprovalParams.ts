@@ -37,6 +37,10 @@ command?: string | null,
  */
 cwd?: AbsolutePathBuf | null,
 /**
+ * Optional model-generated description of the command.
+ */
+description?: string | null,
+/**
  * Best-effort parsed command actions for friendly display.
  */
 commandActions?: Array<CommandAction> | null,

@@ -104,7 +104,6 @@ use codex_app_server_protocol::TurnStartedNotification;
 use codex_app_server_protocol::TurnStatus;
 use codex_app_server_protocol::WarningNotification;
 use codex_app_server_protocol::build_command_execution_begin_item;
-use codex_app_server_protocol::WarningNotification;
 use codex_app_server_protocol::build_command_execution_end_item;
 use codex_app_server_protocol::build_file_change_approval_request_item;
 use codex_app_server_protocol::build_file_change_begin_item;
@@ -166,7 +165,6 @@ struct CommandExecutionCompletionItem {
     command: String,
     cwd: AbsolutePathBuf,
     description: Option<String>,
-    cwd: AbsolutePathBuf,
     command_actions: Vec<V2ParsedCommand>,
 }
 
@@ -1700,14 +1698,6 @@ pub(crate) async fn apply_bespoke_event_handling(
                 return;
             }
             let item_id = exec_command_begin_event.call_id.clone();
-            let cwd = exec_command_begin_event.cwd.clone();
-            let command_actions = exec_command_begin_event
-                .parsed_cmd
-                .into_iter()
-                .map(|parsed| V2ParsedCommand::from_core_with_cwd(parsed, &cwd))
-                .collect::<Vec<_>>();
-            let command = shlex_join(&exec_command_begin_event.command);
-            let process_id = exec_command_begin_event.process_id;
             let first_start = {
                 let mut state = thread_state.lock().await;
                 state
@@ -2082,7 +2072,6 @@ async fn start_command_execution_item(
     command: String,
     cwd: AbsolutePathBuf,
     description: Option<String>,
-    cwd: AbsolutePathBuf,
     command_actions: Vec<V2ParsedCommand>,
     source: CommandExecutionSource,
     outgoing: &ThreadScopedOutgoingMessageSender,

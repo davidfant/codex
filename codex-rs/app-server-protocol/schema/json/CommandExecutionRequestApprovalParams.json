@@ -564,6 +564,13 @@
       ],
       "description": "The command's working directory."
     },
+    "description": {
+      "description": "Optional model-generated description of the command.",
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "itemId": {
       "type": "string"
     },
