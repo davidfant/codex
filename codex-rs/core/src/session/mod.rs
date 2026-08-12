@@ -3672,6 +3672,18 @@ impl Session {
         items
     }
 
+    pub(crate) async fn current_additional_context_items(&self) -> Vec<ResponseItemEnvelope> {
+        self.state
+            .lock()
+            .await
+            .additional_context
+            .render()
+            .into_iter()
+            .map(ResponseItem::from)
+            .map(ResponseItemEnvelope::new)
+            .collect()
+    }
+
     #[tracing::instrument(level = "trace", skip_all, fields(item_count = items.len()))]
     pub(crate) async fn persist_rollout_items(&self, items: &[RolloutItem]) {
         if let Some(live_thread) = self.live_thread()
@@ -3719,12 +3731,13 @@ impl Session {
             state.start_new_context_window()
         };
         let (window_number, window_ids) = window;
-        let context_items = self
+        let mut context_items: Vec<ResponseItemEnvelope> = self
             .build_initial_context_with_world_state(turn_context, world_state.as_ref())
             .await
             .into_iter()
             .map(ResponseItemEnvelope::new)
             .collect();
+        context_items.extend(self.current_additional_context_items().await);
         let turn_context_item = turn_context.to_turn_context_item();
         self.replace_compacted_history(
             context_items,

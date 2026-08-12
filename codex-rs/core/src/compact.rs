@@ -88,7 +88,7 @@ pub(crate) async fn build_compaction_initial_context(
     initial_context_injection: &InitialContextInjection,
 ) -> (Vec<ResponseItemEnvelope>, Option<Arc<WorldState>>) {
     // Return the rendered state with its items so history and its baseline stay identical.
-    match initial_context_injection {
+    let (mut items, world_state_baseline) = match initial_context_injection {
         InitialContextInjection::BeforeLastUserMessage {
             world_state,
             step_context,
@@ -105,7 +105,9 @@ pub(crate) async fn build_compaction_initial_context(
             )
         }
         InitialContextInjection::DoNotInject => (Vec::new(), None),
-    }
+    };
+    items.extend(sess.current_additional_context_items().await);
+    (items, world_state_baseline)
 }
 
 pub(crate) async fn run_inline_auto_compact_task(

@@ -13,6 +13,10 @@ pub(crate) struct AdditionalContextStore {
 }
 
 impl AdditionalContextStore {
+    pub(crate) fn render(&self) -> Vec<ResponseInputItem> {
+        self.values.iter().map(Self::render_entry).collect()
+    }
+
     pub(crate) fn merge(
         &mut self,
         values: BTreeMap<String, AdditionalContextEntry>,
@@ -20,18 +24,22 @@ impl AdditionalContextStore {
         let fragments = values
             .iter()
             .filter(|(key, value)| self.values.get(*key) != Some(*value))
-            .map(|(key, entry)| match entry.kind {
-                AdditionalContextKind::Untrusted => {
-                    AdditionalContextUserFragment::new(key.clone(), entry.value.clone())
-                        .into_response_input_item()
-                }
-                AdditionalContextKind::Application => {
-                    AdditionalContextDeveloperFragment::new(key.clone(), entry.value.clone())
-                        .into_response_input_item()
-                }
-            })
+            .map(Self::render_entry)
             .collect();
         self.values = values;
         fragments
+    }
+
+    fn render_entry((key, entry): (&String, &AdditionalContextEntry)) -> ResponseInputItem {
+        match entry.kind {
+            AdditionalContextKind::Untrusted => {
+                AdditionalContextUserFragment::new(key.clone(), entry.value.clone())
+                    .into_response_input_item()
+            }
+            AdditionalContextKind::Application => {
+                AdditionalContextDeveloperFragment::new(key.clone(), entry.value.clone())
+                    .into_response_input_item()
+            }
+        }
     }
 }
